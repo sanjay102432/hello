@@ -124,6 +124,67 @@
     .dots-row {
       margin-top: 2.5rem;
     }
+
+    /* Button */
+    .reveal-btn {
+      margin-top: 2.5rem;
+      padding: 0.85rem 2.4rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #fff;
+      background: linear-gradient(135deg, #6c63ff, #3b82f6);
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(108, 99, 255, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .reveal-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 35px rgba(108, 99, 255, 0.7);
+    }
+    .reveal-btn:active {
+      transform: scale(0.96);
+    }
+    .reveal-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.15);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .reveal-btn:hover::after { opacity: 1; }
+
+    /* Revealed text */
+    .reveal-text {
+      margin-top: 1.8rem;
+      font-size: 1.15rem;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.85);
+      line-height: 1.7;
+      max-width: 360px;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+    }
+    .reveal-text.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .reveal-text span {
+      background: linear-gradient(90deg, #a78bfa, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -142,7 +203,23 @@
       <span class="dot"></span>
       <span class="dot"></span>
     </div>
+
+    <button class="reveal-btn" id="reveal-btn" onclick="revealText()">✨ Click Me</button>
+
+    <p class="reveal-text" id="reveal-text">
+      🌍 The internet is <span>vast &amp; beautiful</span>.<br/>
+      You just took your first step into it. <span>Welcome aboard! 🚀</span>
+    </p>
   </main>
+
+  <script>
+    function revealText() {
+      const text = document.getElementById('reveal-text');
+      const btn  = document.getElementById('reveal-btn');
+      const isVisible = text.classList.toggle('visible');
+      btn.textContent = isVisible ? '🙈 Hide' : '✨ Click Me';
+    }
+  </script>
 
 </body>
 </html>
