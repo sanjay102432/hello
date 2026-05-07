@@ -3,436 +3,102 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello — Unity Scripts</title>
-  <meta name="description" content="Unity C# scripts showcase — PlayerMovement, EnemyFollow, Coin, CoinSystem." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      min-height: 100vh;
-      background: #0a0a0f;
-      font-family: 'Outfit', sans-serif;
-      color: #e2e8f0;
-      overflow-x: hidden;
-    }
-
-    /* ── Background blobs ── */
-    .blob {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(110px);
-      opacity: 0.28;
-      animation: drift 10s ease-in-out infinite alternate;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .blob-1 { width: 520px; height: 520px; background: radial-gradient(circle,#6c63ff,#3b82f6); top:-160px; left:-160px; animation-delay:0s; }
-    .blob-2 { width: 420px; height: 420px; background: radial-gradient(circle,#f43f5e,#fb923c); bottom:-120px; right:-120px; animation-delay:-5s; }
-    .blob-3 { width: 320px; height: 320px; background: radial-gradient(circle,#22d3ee,#818cf8); bottom:80px; left:80px; animation-delay:-2.5s; }
-
-    @keyframes drift {
-      from { transform: translate(0,0) scale(1); }
-      to   { transform: translate(35px,25px) scale(1.08); }
-    }
-
-    /* ── Hero ── */
-    .hero {
-      position: relative;
-      z-index: 10;
-      text-align: center;
-      padding: 5rem 1.5rem 2.5rem;
-      animation: fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) both;
-    }
-    @keyframes fadeUp {
-      from { opacity:0; transform:translateY(40px); }
-      to   { opacity:1; transform:translateY(0); }
-    }
-
-    .greeting {
-      font-size: clamp(3.5rem,10vw,7rem);
-      font-weight: 800;
-      background: linear-gradient(135deg,#fff 0%,#a78bfa 40%,#60a5fa 70%,#f472b6 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      line-height: 1;
-      letter-spacing: -2px;
-      background-size: 200% auto;
-      animation: shimmer 4s linear infinite;
-    }
-    @keyframes shimmer {
-      0%   { background-position: 0% center; }
-      100% { background-position: 200% center; }
-    }
-
-    .tagline {
-      margin-top: 1rem;
-      font-size: 1rem;
-      font-weight: 300;
-      color: rgba(255,255,255,0.45);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    .badge {
-      display: inline-block;
-      margin-top: 1.4rem;
-      padding: 0.35rem 1rem;
-      background: rgba(108,99,255,0.18);
-      border: 1px solid rgba(108,99,255,0.4);
-      border-radius: 999px;
-      font-size: 0.8rem;
-      color: #a78bfa;
-      letter-spacing: 0.1em;
-    }
-
-    /* ── Scripts Section ── */
-    .scripts-section {
-      position: relative;
-      z-index: 10;
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 1rem 1.5rem 5rem;
-      animation: fadeUp 1s 0.2s cubic-bezier(0.22,1,0.36,1) both;
-    }
-
-    .section-label {
-      font-size: 0.75rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
-      margin-bottom: 1.2rem;
-    }
-
-    /* ── Tab Bar ── */
-    .tabs {
-      display: flex;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-      margin-bottom: -1px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .tab-btn {
-      padding: 0.6rem 1.2rem;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-bottom: none;
-      border-radius: 0.6rem 0.6rem 0 0;
-      color: rgba(255,255,255,0.45);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.82rem;
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s;
-    }
-    .tab-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
-    .tab-btn.active {
-      background: rgba(255,255,255,0.07);
-      border-color: rgba(255,255,255,0.15);
-      color: #a78bfa;
-    }
-
-    /* ── Code Panel ── */
-    .code-panel {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 0 0.8rem 0.8rem 0.8rem;
-      overflow: hidden;
-    }
-
-    .code-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 1.2rem;
-      background: rgba(255,255,255,0.04);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .file-name {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.5);
-    }
-    .file-name span { color: #60a5fa; }
-
-    .copy-btn {
-      padding: 0.3rem 0.85rem;
-      background: rgba(108,99,255,0.2);
-      border: 1px solid rgba(108,99,255,0.4);
-      border-radius: 999px;
-      color: #a78bfa;
-      font-size: 0.75rem;
-      cursor: pointer;
-      font-family: 'Outfit', sans-serif;
-      transition: background 0.2s, transform 0.15s;
-    }
-    .copy-btn:hover { background: rgba(108,99,255,0.35); transform: scale(1.05); }
-    .copy-btn:active { transform: scale(0.96); }
-
-    /* Code content */
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    pre {
-      padding: 1.5rem 1.4rem;
-      overflow-x: auto;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.82rem;
-      line-height: 1.75;
-      color: #cdd6f4;
-    }
-
-    /* Syntax colours */
-    .kw  { color: #cba6f7; }   /* keyword */
-    .tp  { color: #89b4fa; }   /* type */
-    .fn  { color: #89dceb; }   /* function */
-    .str { color: #a6e3a1; }   /* string */
-    .cm  { color: #6c7086; font-style: italic; } /* comment */
-    .nm  { color: #fab387; }   /* number */
-    .op  { color: #89dceb; }   /* operator */
-
-    /* ── Dots row ── */
-    .dots-row { text-align: center; margin-top: 3rem; }
-    .dot {
-      display: inline-block;
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: #a78bfa;
-      margin: 0 6px;
-      animation: pulse 1.5s ease-in-out infinite;
-    }
-    .dot:nth-child(2) { animation-delay:0.2s; background:#60a5fa; }
-    .dot:nth-child(3) { animation-delay:0.4s; background:#f472b6; }
-    @keyframes pulse {
-      0%,100% { transform:scale(1); opacity:0.6; }
-      50%      { transform:scale(1.5); opacity:1; }
-    }
-
-    /* ── Reveal button ── */
-    .reveal-btn {
-      display: block;
-      margin: 2rem auto 0;
-      padding: 0.85rem 2.4rem;
-      font-family: 'Outfit', sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      color: #fff;
-      background: linear-gradient(135deg,#6c63ff,#3b82f6);
-      border: none;
-      border-radius: 999px;
-      cursor: pointer;
-      box-shadow: 0 0 22px rgba(108,99,255,0.4);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .reveal-btn:hover { transform:translateY(-3px); box-shadow:0 0 38px rgba(108,99,255,0.7); }
-    .reveal-btn:active { transform:scale(0.96); }
-
-    .reveal-text {
-      margin-top: 1.8rem;
-      text-align: center;
-      font-size: 1.1rem;
-      font-weight: 300;
-      color: rgba(255,255,255,0.8);
-      line-height: 1.7;
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-    .reveal-text.visible { opacity:1; transform:translateY(0); }
-    .reveal-text span {
-      background: linear-gradient(90deg,#a78bfa,#60a5fa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      font-weight: 600;
-    }
-  </style>
+  <title>Unity Scripts</title>
 </head>
 <body>
 
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div class="blob blob-3"></div>
+<h1>Unity Scripts</h1>
+<hr>
 
-  <!-- Hero -->
-  <header class="hero">
-    <h1 class="greeting">Hello</h1>
-    <p class="tagline">Welcome to the world wide web</p>
-    <span class="badge">🎮 Unity C# Scripts</span>
-  </header>
+<h2>PlayerMovement.cs</h2>
+<pre>
+using UnityEngine;
 
-  <!-- Scripts Showcase -->
-  <section class="scripts-section">
-    <p class="section-label">📁 assets / scripts</p>
-
-    <!-- Tab Buttons -->
-    <div class="tabs" role="tablist">
-      <button class="tab-btn active" id="tab-pm"  onclick="switchTab('pm')"  role="tab">PlayerMovement.cs</button>
-      <button class="tab-btn"        id="tab-ef"  onclick="switchTab('ef')"  role="tab">EnemyFollow.cs</button>
-      <button class="tab-btn"        id="tab-c"   onclick="switchTab('c')"   role="tab">Coin.cs</button>
-      <button class="tab-btn"        id="tab-cs"  onclick="switchTab('cs')"  role="tab">CoinSystem.cs</button>
-    </div>
-
-    <!-- Code Panel -->
-    <div class="code-panel">
-
-      <!-- Header bar (file name + copy) -->
-      <div class="code-header">
-        <span class="file-name" id="file-label">assets/<span>PlayerMovement.cs</span></span>
-        <button class="copy-btn" id="copy-btn" onclick="copyCode()">⎘ Copy</button>
-      </div>
-
-      <!-- PlayerMovement -->
-      <div class="tab-content active" id="content-pm">
-        <pre><code
-><span class="kw">using</span> UnityEngine;
-
-<span class="kw">public class</span> <span class="tp">PlayerMovement</span> : <span class="tp">MonoBehaviour</span>
+public class PlayerMovement : MonoBehaviour
 {
-    <span class="kw">public</span> <span class="tp">float</span> speed <span class="op">=</span> <span class="nm">5f</span>;
+    public float speed = 5f;
 
-    <span class="kw">void</span> <span class="fn">Update</span>()
+    void Update()
     {
-        <span class="tp">float</span> moveX <span class="op">=</span> Input.<span class="fn">GetAxis</span>(<span class="str">"Horizontal"</span>);
-        <span class="tp">float</span> moveY <span class="op">=</span> Input.<span class="fn">GetAxis</span>(<span class="str">"Vertical"</span>);
+        float moveX = Input.GetAxis("Horizontal");
+        float moveY = Input.GetAxis("Vertical");
 
-        transform.<span class="fn">Translate</span>(moveX <span class="op">*</span> speed <span class="op">*</span> Time.deltaTime,
-                            moveY <span class="op">*</span> speed <span class="op">*</span> Time.deltaTime,
-                            <span class="nm">0</span>);
+        transform.Translate(moveX * speed * Time.deltaTime,
+                            moveY * speed * Time.deltaTime,
+                            0);
     }
-}</code></pre>
-      </div>
+}
+</pre>
 
-      <!-- EnemyFollow -->
-      <div class="tab-content" id="content-ef">
-        <pre><code
-><span class="kw">using</span> UnityEngine;
+<hr>
 
-<span class="kw">public class</span> <span class="tp">EnemyFollow</span> : <span class="tp">MonoBehaviour</span>
+<h2>EnemyFollow.cs</h2>
+<pre>
+using UnityEngine;
+
+public class EnemyFollow : MonoBehaviour
 {
-    <span class="kw">public</span> <span class="tp">Transform</span> player;
-    <span class="kw">public</span> <span class="tp">float</span> speed <span class="op">=</span> <span class="nm">3f</span>;
-    <span class="kw">public</span> <span class="tp">float</span> followDistance <span class="op">=</span> <span class="nm">5f</span>;
+    public Transform player;
+    public float speed = 3f;
+    public float followDistance = 5f;
 
-    <span class="kw">void</span> <span class="fn">Update</span>()
+    void Update()
     {
-        <span class="tp">float</span> distance <span class="op">=</span> Vector2.<span class="fn">Distance</span>(transform.position, player.position);
+        float distance = Vector2.Distance(transform.position, player.position);
 
-        <span class="kw">if</span> (distance <span class="op">&lt;</span> followDistance)
+        if (distance < followDistance)
         {
-            transform.position <span class="op">=</span> Vector2.<span class="fn">MoveTowards</span>(
+            transform.position = Vector2.MoveTowards(
                 transform.position,
                 player.position,
-                speed <span class="op">*</span> Time.deltaTime
+                speed * Time.deltaTime
             );
         }
     }
-}</code></pre>
-      </div>
+}
+</pre>
 
-      <!-- Coin -->
-      <div class="tab-content" id="content-c">
-        <pre><code
-><span class="kw">using</span> UnityEngine;
+<hr>
 
-<span class="kw">public class</span> <span class="tp">Coin</span> : <span class="tp">MonoBehaviour</span>
+<h2>Coin.cs</h2>
+<pre>
+using UnityEngine;
+
+public class Coin : MonoBehaviour
 {
-    <span class="kw">public</span> <span class="tp">CoinSystem</span> coinSystem;
+    public CoinSystem coinSystem;
 
-    <span class="kw">private void</span> <span class="fn">OnTriggerEnter2D</span>(<span class="tp">Collider2D</span> other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        <span class="kw">if</span> (other.<span class="fn">CompareTag</span>(<span class="str">"Player"</span>))
+        if (other.CompareTag("Player"))
         {
-            coinSystem.<span class="fn">AddCoin</span>();
-            <span class="fn">Destroy</span>(gameObject);
+            coinSystem.AddCoin();
+            Destroy(gameObject);
         }
     }
-}</code></pre>
-      </div>
+}
+</pre>
 
-      <!-- CoinSystem -->
-      <div class="tab-content" id="content-cs">
-        <pre><code
-><span class="kw">using</span> UnityEngine;
-<span class="kw">using</span> TMPro;
+<hr>
 
-<span class="kw">public class</span> <span class="tp">CoinSystem</span> : <span class="tp">MonoBehaviour</span>
+<h2>CoinSystem.cs</h2>
+<pre>
+using UnityEngine;
+using TMPro;
+
+public class CoinSystem : MonoBehaviour
 {
-    <span class="kw">public</span> <span class="tp">TextMeshProUGUI</span> coinText;
+    public TextMeshProUGUI coinText;
 
-    <span class="tp">int</span> coins <span class="op">=</span> <span class="nm">0</span>;
+    int coins = 0;
 
-    <span class="kw">public void</span> <span class="fn">AddCoin</span>()
+    public void AddCoin()
     {
-        coins<span class="op">++</span>;
-        coinText.text <span class="op">=</span> <span class="str">"Coins: "</span> <span class="op">+</span> coins;
+        coins++;
+        coinText.text = "Coins: " + coins;
     }
-}</code></pre>
-      </div>
-
-    </div><!-- /code-panel -->
-
-    <!-- Reveal button -->
-    <div class="dots-row">
-      <span class="dot"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-    </div>
-
-    <button class="reveal-btn" id="reveal-btn" onclick="revealText()">✨ Click Me</button>
-    <p class="reveal-text" id="reveal-text">
-      🌍 The internet is <span>vast &amp; beautiful</span>.<br/>
-      You just took your first step into it. <span>Welcome aboard! 🚀</span>
-    </p>
-
-  </section>
-
-  <script>
-    const tabs = {
-      pm: { label: 'PlayerMovement.cs' },
-      ef: { label: 'EnemyFollow.cs'   },
-      c:  { label: 'Coin.cs'          },
-      cs: { label: 'CoinSystem.cs'    },
-    };
-
-    let current = 'pm';
-
-    function switchTab(id) {
-      // Deactivate old
-      document.getElementById('tab-' + current).classList.remove('active');
-      document.getElementById('content-' + current).classList.remove('active');
-      // Activate new
-      current = id;
-      document.getElementById('tab-' + id).classList.add('active');
-      document.getElementById('content-' + id).classList.add('active');
-      // Update file label
-      document.getElementById('file-label').innerHTML =
-        'assets/<span>' + tabs[id].label + '</span>';
-    }
-
-    function copyCode() {
-      const pre = document.querySelector('#content-' + current + ' pre');
-      const text = pre.innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        const btn = document.getElementById('copy-btn');
-        btn.textContent = '✅ Copied!';
-        setTimeout(() => btn.textContent = '⎘ Copy', 1800);
-      });
-    }
-
-    function revealText() {
-      const text = document.getElementById('reveal-text');
-      const btn  = document.getElementById('reveal-btn');
-      const isVisible = text.classList.toggle('visible');
-      btn.textContent = isVisible ? '🙈 Hide' : '✨ Click Me';
-    }
-  </script>
+}
+</pre>
 
 </body>
 </html>
